@@ -10,6 +10,8 @@ import { FavoritesComponent } from './favorites/favorites.component';
 import { MyPostsComponent } from './my-posts/my-posts.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { LoginComponent } from './auth/login/login.component';
+import { HomeComponent } from './home/home.component';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -21,10 +23,12 @@ import { LoginComponent } from './auth/login/login.component';
     FavoritesComponent,
     MyPostsComponent,
     SignUpComponent,
-    LoginComponent
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
