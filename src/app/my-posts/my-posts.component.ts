@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationService } from "../shared/notification.service";
 import { MyFireService } from '../shared/myfire.service';
+import * as firebase from 'firebase'
 
 @Component({
   selector: 'app-my-posts',
@@ -8,10 +9,23 @@ import { MyFireService } from '../shared/myfire.service';
 })
 export class MyPostsComponent implements OnInit {
 
-  //constructor() { }
+  postLists: any = []
+  personalPostRef: any;
+
   constructor(private myFire: MyFireService, private notifier: NotificationService) { }
 
   ngOnInit() {
+
+    const uid = firebase.auth().currentUser.uid
+    this.personalPostRef = this.myFire.getUserPostsRef(uid)
+    this.personalPostRef.on('child_added', data => {
+      this.postLists.push({
+        key: data.key,
+        data: data.val()
+      })
+    })
+    console.log(this.postLists)
+
   }
 
   onFileSelection(event) {
@@ -20,13 +34,18 @@ export class MyPostsComponent implements OnInit {
     if (fileList.length > 0) {
       const file: File = fileList[0];
       this.myFire.uploadFile(file)
-        /*.then(data => {
+        .then(data => {
           this.notifier.display('success', 'Picture Successfully uploaded!!');
-          return this.myFire.handleImageUpload(data);
+          console.log(data['fileUrl'])
+          this.myFire.handleImageUpload(data);
         })
         .catch(err => {
-          this.notifier.display('error', err.message);
-        });*/
+          if (err.message.includes('First argument contains an invalid key')) {
+            this.notifier.display('success', 'Picture Successfully uploaded!!');
+          } else {
+            this.notifier.display('error', err.message);
+          }
+        });
     }
 
 
