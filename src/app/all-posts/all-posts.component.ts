@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as firebase from 'firebase';
 import { MyFireService } from "../shared/myfire.service";
 import { NotificationService } from "../shared/notification.service";
@@ -9,10 +9,11 @@ import _ from 'lodash';
   templateUrl: './all-posts.component.html',
   styleUrls: ['./all-posts.component.css']
 })
-export class AllPostsComponent implements OnInit {
-  allRef: any;
-  loadMoreRef: any;
-  all: any = [];
+export class AllPostsComponent implements OnInit, OnDestroy {
+
+  public allRef: any;
+  public loadMoreRef: any;
+  public all: any = [];
 
   constructor() { }
 
@@ -26,7 +27,7 @@ export class AllPostsComponent implements OnInit {
     });
   }
 
-  onLoadMore() {
+  public onLoadMore(): void {
     if (this.all.length > 0) {
       //const lastLoadedPost = _.last(this.all);
       const lastLoadedPost = this.all[this.all.length - 1]
@@ -50,11 +51,11 @@ export class AllPostsComponent implements OnInit {
 
   }
 
-  /*ngOnDestroy() {
+  ngOnDestroy() {
     this.allRef.off();
     if (this.loadMoreRef) {
       this.loadMoreRef.off();
     }
-  }*/
+  }
 
 }
