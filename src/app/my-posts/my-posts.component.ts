@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { NotificationService } from "../shared/notification.service";
 import { MyFireService } from '../shared/myfire.service';
 import * as firebase from 'firebase'
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'app-my-posts',
-  templateUrl: './my-posts.component.html'
+  templateUrl: './my-posts.component.html',
+  styleUrls: ['./my-posts.component.css']
 })
-export class MyPostsComponent implements OnInit {
+export class MyPostsComponent implements OnInit, OnDestroy {
 
   postLists: any = []
   personalPostRef: any;
@@ -24,8 +26,6 @@ export class MyPostsComponent implements OnInit {
         data: data.val()
       })
     })
-    console.log(this.postLists)
-
   }
 
   onFileSelection(event) {
@@ -36,7 +36,6 @@ export class MyPostsComponent implements OnInit {
       this.myFire.uploadFile(file)
         .then(data => {
           this.notifier.display('success', 'Picture Successfully uploaded!!');
-          console.log(data['fileUrl'])
           this.myFire.handleImageUpload(data);
         })
         .catch(err => {
@@ -47,8 +46,10 @@ export class MyPostsComponent implements OnInit {
           }
         });
     }
+  }
 
-
+  ngOnDestroy(): void {
+    this.personalPostRef.off()
   }
 
 }
