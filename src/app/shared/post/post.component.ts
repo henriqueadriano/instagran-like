@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as firebase from 'firebase'
 
 @Component({
@@ -9,9 +9,12 @@ import * as firebase from 'firebase'
 export class PostComponent implements OnInit {
 
   @Input() imageName: string
+  @Input() displayPostedBy: boolean = true
+  @Input() displayFavoritesButton: boolean = true
   defaultImage: string = "http://via.placeholder.com/150X150"
   imageData: any = {}
-  @Input() displayPostedBy: any
+
+  @Output() favoriteClicked = new EventEmitter<any>();
 
   constructor() { }
 
@@ -22,6 +25,10 @@ export class PostComponent implements OnInit {
         this.imageData = snapshot.val()
         this.defaultImage = this.imageData.fileUrl
       })
+  }
+
+  onFavoritesClicked() {
+    this.favoriteClicked.emit(this.imageData);
   }
 
 }
